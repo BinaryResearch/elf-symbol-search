@@ -1,4 +1,4 @@
-# elf-symbol-query
+# elf-symbol-search
 
 1. Search for binaries that export a particular symbol.
 2. Search for binaries that import a particular symbol.
