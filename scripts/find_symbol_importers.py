@@ -14,7 +14,8 @@ logging.basicConfig(filename="/tmp/elf-symbol-search.log",
 
 # If dynamic symbol["st_shndx"] == "SH_UNDEF", it is an import.
 # Else, it is an export.
-def search_for_import(file_handle, elf_file, export_name, strict):
+def search_for_import(file_handle, elf_file, import_name, strict):
+    logging.info(f"[+] Checking file '{file_handle.name}'")
     for section in elf_file.iter_sections():
         if isinstance(section, SymbolTableSection) and section['sh_type'] == 'SHT_DYNSYM':
             for symbol in section.iter_symbols():
@@ -27,14 +28,16 @@ def search_for_import(file_handle, elf_file, export_name, strict):
 
                 if shndx == "SHN_UNDEF":
                     if strict:
-                        if export_name == sym_name:
+                        if import_name == sym_name:
                             logging.info(f"[+] '{file_handle.name}' imports symbol matching name '{sym_name}'")
+                            #print(f"'{file_handle.name}' imports symbol matching name '{sym_name}'")
                     else:
-                        if export_name in sym_name:
+                        if import_name in sym_name:
                             logging.info(f"[+] '{file_handle.name}' imports symbol '{sym_name}'")
+                            #print(f"'{file_handle.name}' imports symbol '{sym_name}'")
 
 
-def parse_file(filepath, export_name, strict):
+def parse_file(filepath, import_name, strict):
     with open(filepath, "rb") as f:
         try:
             elf_file = ELFFile(f)
@@ -44,7 +47,7 @@ def parse_file(filepath, export_name, strict):
             logging.error(f"[!] ERROR: unexpected error parsing '{f.name}'")
             return
 
-        search_for_import(f, elf_file, export_name, strict)        
+        search_for_import(f, elf_file, import_name, strict)        
 
 
 def main(args):
@@ -57,14 +60,14 @@ def main(args):
         if not pathlib.Path.is_file(file_path):
             continue
 
-        parse_file(file_path, args.export_name, args.strict)
+        parse_file(file_path, args.import_name, args.strict)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--root-path", help="Root directory of file system search", required=True)
     parser.add_argument("--import-name", help="Name of imported symbol to search for", required=True)
-    parser.add_argument("--strict", help="Only exact matches to export name argument will be logged", action="store_true")
+    parser.add_argument("--strict", help="Only exact matches to import name argument will be logged", action="store_true")
     args = parser.parse_args()
 
     main(args)
