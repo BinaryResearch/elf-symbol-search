@@ -8,7 +8,7 @@ from elftools.elf.sections import SymbolTableSection
 from elftools.common.exceptions import ELFError
 
 
-logging.basicConfig(filename="/tmp/elf-symbol-query.log",
+logging.basicConfig(filename="/tmp/elf-symbol-search.log",
                     level=logging.INFO)
 
 
