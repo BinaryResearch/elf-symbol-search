@@ -99,7 +99,7 @@ def parse_file(file_path, root_path):
             logging.error(f"[!] No dynamic imports found. Quitting.")
             exit(-1)
 
-        logging.info(f" Dynamic imports: {dynamic_imports_list}")
+        #logging.info(f" Dynamic imports: {dynamic_imports_list}")
 
         # 3. Create dictionary of { "exported symbol": [list of shared objects exporting symbol] } pairs
         exports_dict = {}
@@ -132,8 +132,11 @@ def parse_file(file_path, root_path):
                 else:
                     exports_dict[dynsym_name].append(shared_object_name)
 
-        # 4. Perform lookup of each ELF file symbol in exports dictionary
-        
+        # 4. Perform lookup of each ELF file import symbol in exports dictionary
+        for imported_symbol in sorted(dynamic_imports_list):
+            if imported_symbol in exports_dict.keys():
+                print(f"{imported_symbol:30}\t{exports_dict[imported_symbol]}")
+
 
 def main(args):
     root_path = pathlib.Path(args.root_path)
