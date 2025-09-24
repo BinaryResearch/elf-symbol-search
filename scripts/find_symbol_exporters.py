@@ -14,7 +14,7 @@ logging.basicConfig(filename="/tmp/elf-symbol-search.log",
 
 # If dynamic symbol["st_shndx"] == "SH_UNDEF", it is an import.
 # Else, it is an export.
-def search_for_export(file_handle, elf_file, export_name, strict):
+def search_for_dynamic_symbol(file_handle, elf_file, symbol_name, strict):
     for section in elf_file.iter_sections():
         if isinstance(section, SymbolTableSection) and section['sh_type'] == 'SHT_DYNSYM':
             for symbol in section.iter_symbols():
@@ -29,14 +29,14 @@ def search_for_export(file_handle, elf_file, export_name, strict):
                     continue
 
                 if strict:
-                    if export_name == sym_name:
-                        logging.info(f"[+] '{file_handle.name}' exports symbol matching name '{sym_namename}'")
+                    if symbol_name == sym_name:
+                        logging.info(f" [EXPORT]: {sym_name}: {file_handle.name}")
                 else:
-                    if export_name in sym_name:
-                        logging.info(f"[+] '{file_handle.name}' exports symbol '{sym_name}'")
+                    if symbol_name in sym_name:
+                        logging.info(f" [EXPORT]: {sym_name}: {file_handle.name}")
 
 
-def parse_file(filepath, export_name, strict):
+def parse_file(filepath, symbol_name, strict):
     with open(filepath, "rb") as f:
         try:
             elf_file = ELFFile(f)
@@ -46,7 +46,7 @@ def parse_file(filepath, export_name, strict):
             logging.error(f"[!] ERROR: unexpected error parsing '{f.name}'")
             return
 
-        search_for_export(f, elf_file, export_name, strict)        
+        search_for_dynamic_symbol(f, elf_file, symbol_name, strict)        
 
 
 def main(args):
@@ -59,14 +59,14 @@ def main(args):
         if not pathlib.Path.is_file(file_path):
             continue
 
-        parse_file(file_path, args.export_name, args.strict)
+        parse_file(file_path, args.symbol_name, args.strict)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--root-path", help="Root directory of file system search", required=True)
-    parser.add_argument("--export-name", help="Name of exported symbol to search for", required=True)
-    parser.add_argument("--strict", help="Only exact matches to export name argument will be logged", action="store_true")
+    parser.add_argument("--symbol-name", help="Name of dynamic symbol to search for", required=True)
+    parser.add_argument("--strict", help="Only exact matches to symbol name argument will be logged", action="store_true")
     args = parser.parse_args()
 
     main(args)
