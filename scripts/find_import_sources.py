@@ -3,18 +3,26 @@
 import pathlib
 import argparse
 import logging
+from enum import Enum
 from elftools.elf.elffile import ELFFile
 from elftools.elf.sections import SymbolTableSection
 from elftools.common.exceptions import ELFError
+
+
+class DynSymType(Enum):
+    IMPORT = 0
+    EXPORT = 1
 
 
 logging.basicConfig(filename="/tmp/elf-symbol-search.log",
                     level=logging.INFO)
 
 
-# If dynamic symbol["st_shndx"] == "SH_UNDEF", it is an symbol.
+# If dynamic symbol["st_shndx"] == "SH_UNDEF", it is an imported symbol.
 # Else, it is an export.
-def search_for_dynamic_symbol(file_handle, elf_file, symbol_name, strict):
+#
+def get_dynamic_symbols_by_type(elf_file, dynsym_type):
+    symbols_list = []
     for section in elf_file.iter_sections():
         if isinstance(section, SymbolTableSection) and section['sh_type'] == 'SHT_DYNSYM':
             for symbol in section.iter_symbols():
@@ -24,14 +32,18 @@ def search_for_dynamic_symbol(file_handle, elf_file, symbol_name, strict):
                     continue
 
                 shndx = symbol["st_shndx"]
+                
+                if dynsym_type == DynSymType.IMPORT:
+                     if shndx == "SHN_UNDEF":
+                        symbols_list.append(sym_name)
 
-                if shndx == "SHN_UNDEF":
-                    if strict:
-                        if symbol_name == sym_name:
-                            logging.info(f" [IMPORT]: {sym_name}: {file_handle.name}")
+                if dynsym_type == DynSymType.EXPORT:
+                    if shndx == "SHN_UNDEF":
+                        continue
                     else:
-                        if symbol_name in sym_name:
-                            logging.info(f" [IMPORT]: {sym_name}: {file_handle.name}")
+                        symbols_list.append(sym_name)
+
+    return symbols_list
 
 
 def get_required_shared_objects(elf_file):
@@ -48,7 +60,18 @@ def get_required_shared_objects(elf_file):
             shared_objects_list.append(tag.needed)
 
     return shared_objects_list
-    
+
+
+def find_file(root_path, file_name):
+    for path in pathlib.Path(root_path).rglob("*"):
+        if not pathlib.Path.is_file(path):
+            continue
+
+        if path.name == file_name:
+            return path
+        
+    return None
+
 
 def parse_file(file_path, root_path):
     with open(file_path, "rb") as f:
@@ -71,10 +94,46 @@ def parse_file(file_path, root_path):
         logging.info(f" Required shared objects: {shared_objects_list}")
         
         # 2. Get list of imports of ELF file
+        dynamic_imports_list = get_dynamic_symbols_by_type(elf_file, DynSymType.IMPORT)
+        if len(dynamic_imports_list) == 0:
+            logging.error(f"[!] No dynamic imports found. Quitting.")
+            exit(-1)
+
+        logging.info(f" Dynamic imports: {dynamic_imports_list}")
 
         # 3. Create dictionary of { "exported symbol": [list of shared objects exporting symbol] } pairs
+        exports_dict = {}
+        for shared_object_name in shared_objects_list:
+            so_path = find_file(root_path, shared_object_name)
+            if so_path is None:
+                logging.info(f"[!] Shared object '{so_path}' not found.")
+                continue
+
+            dynamic_exports_list = []
+            with open(so_path, "rb") as so_f:
+                try:
+                    so_elf_file = ELFFile(so_f)
+                except ELFError as e:
+                    logging.error(f"[!]'Caught ELFError when parsing {f.name}': {e}")
+                    continue
+                except Exception as e:
+                    logging.error(f"[!] Unexpected error parsing '{f.name}': {e}")
+                    continue
+
+                dynamic_exports_list = get_dynamic_symbols_by_type(so_elf_file, DynSymType.EXPORT)
+                if dynamic_exports_list is None or len(dynamic_exports_list) == 0:
+                    logging.error(f"[!] No dynamic exports found in '{so_path}'")
+                    continue
+
+            #print(len(dynamic_exports_list))
+            for dynsym_name in dynamic_exports_list:
+                if dynsym_name not in exports_dict:
+                    exports_dict[dynsym_name] = [shared_object_name]
+                else:
+                    exports_dict[dynsym_name].append(shared_object_name)
 
         # 4. Perform lookup of each ELF file symbol in exports dictionary
+        
 
 def main(args):
     root_path = pathlib.Path(args.root_path)
