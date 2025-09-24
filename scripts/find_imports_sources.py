@@ -91,7 +91,8 @@ def parse_file(file_path, root_path):
             logging.error(f"[!] No required shared objects found. Quitting.")
             exit(-1)
 
-        logging.info(f" Required shared objects: {shared_objects_list}")
+        logging.info(f" REQUIRED SHARED OBJECTS:\t{shared_objects_list}")
+        print(f" REQUIRED SHARED OBJECTS:\t\t{shared_objects_list}")
         
         # 2. Get list of imports of ELF file
         dynamic_imports_list = get_dynamic_symbols_by_type(elf_file, DynSymType.IMPORT)
@@ -133,10 +134,14 @@ def parse_file(file_path, root_path):
                     exports_dict[dynsym_name].append(shared_object_name)
 
         # 4. Perform lookup of each ELF file import symbol in exports dictionary
+        import_source_map = {}
         for imported_symbol in sorted(dynamic_imports_list):
             if imported_symbol in exports_dict.keys():
-                print(f"{imported_symbol:30}\t{exports_dict[imported_symbol]}")
+                #logging.info(f" {imported_symbol:30}\t{exports_dict[imported_symbol]}")
+                import_source_map[imported_symbol] = exports_dict[imported_symbol]
+                print(f" {imported_symbol:30}\t{exports_dict[imported_symbol]}")
 
+        logging.info(f" IMPORT TO SOURCE MAPPING:\t{import_source_map}")
 
 def main(args):
     root_path = pathlib.Path(args.root_path)
