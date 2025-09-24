@@ -60,14 +60,21 @@ def parse_file(file_path, root_path):
             logging.error(f"[!] ERROR: unexpected error parsing '{f.name}'")
             return
 
-        shared_objects_list = get_required_shared_objects(elf_file)
+        logging.info(f" Getting required shared objects of '{file_path}'")
 
+        # 1. Get names of required shared objects
+        shared_objects_list = get_required_shared_objects(elf_file)
         if shared_objects_list is None or len(shared_objects_list) == 0:
             logging.error(f"[!] No required shared objects found. Quitting.")
             exit(-1)
 
-        print(shared_objects_list)
+        logging.info(f" Required shared objects: {shared_objects_list}")
+        
+        # 2. Get list of imports of ELF file
 
+        # 3. Create dictionary of { "exported symbol": [list of shared objects exporting symbol] } pairs
+
+        # 4. Perform lookup of each ELF file symbol in exports dictionary
 
 def main(args):
     root_path = pathlib.Path(args.root_path)
