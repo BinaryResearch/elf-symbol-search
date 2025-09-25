@@ -10,8 +10,9 @@ Search file system for dynamic symbols.
 
 Use cases:
 
- - You've unpacked an archive containing eleventy squijillion ELF binaries and want to know which binaries import/export some symbol (e.g. `strcpy`)
+ - You've unpacked a firmware blob containing a large number of ELF binaries and want to know which binaries import/export some symbol (e.g. `strcpy`)
  - You want to know which shared object each import of a particular ELF binary comes from
+ - You want to know the set of shared objects required by each dynamically-linked ELF because you want to investigate library dependencies
 
 
 ## Examples
@@ -19,7 +20,7 @@ Use cases:
 
 ### `find_symbol_exporters.py`
 
-Find all exporters and importers of a dynamic symbol.
+Search for exporters of a dynamic symbol.
 
 ```
 $ python3 ./find_symbol_exporters.py 
@@ -29,7 +30,7 @@ $ python3 ./find_symbol_exporters.py
 
 ### `find_symbol_importers.py`
 
-Find all importers of a dynamic symbol.
+Search for importers of a dynamic symbol.
 
 ```
 $ ./find_symbol_importers.py 
@@ -39,7 +40,7 @@ $ ./find_symbol_importers.py
 
 ### `find_dynamic_symbol.py`
 
-Find all exporters and importers of a dynamic symbol.
+Search for exporters and importers of a dynamic symbol.
 
 ```
 $ ./find_dynamic_symbol.py 
@@ -47,13 +48,26 @@ $ ./find_dynamic_symbol.py
     --symbol-name strcpy
 ```
 
+### `find_any_symbol.py`
+
+Search for presence of any symbol in `.dynsym` or `.symtab` by name.
+
+```
+$ ./find_any_symbol.py 
+    --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
+    --symbol-name strlcat
+```
 
 ### `find_imports_sources.py`
 
-Identify shared object of origin of every import in binary.
+Identify shared object of origin of every import in the specified binary.
 
 ```
 $ ./find_imports_sources.py 
     --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
     --elfbin-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/sbin/httpd
 ```
+
+### `log_required_libs.py`
+
+Log the set of shared objects required by every dynamically-linked ELF in the given directory tree.
