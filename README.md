@@ -46,7 +46,7 @@ Search for exporters and importers of a dynamic symbol.
 ```
 $ ./find_dynamic_symbol.py 
     --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
-    --symbol-name strcpy
+    --symbol-name memcpy
 ```
 
 ### `find_any_symbol.py`
@@ -56,7 +56,8 @@ Search for presence of any symbol in `.dynsym` or `.symtab` by name.
 ```
 $ ./find_any_symbol.py 
     --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
-    --symbol-name strlcat
+    --symbol-name main
+    --strict
 ```
 
 ### `find_imports_sources.py`
