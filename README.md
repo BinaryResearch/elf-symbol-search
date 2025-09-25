@@ -14,6 +14,7 @@ Use cases:
  - You want to know which shared object each import of a particular ELF binary comes from
  - You want to know the set of shared objects required by each dynamically-linked ELF because you want to investigate library dependencies
 
+Note: all search results are output to `/tmp/elf-symbol-search.log`.
 
 ## Examples
 
