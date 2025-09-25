@@ -11,6 +11,7 @@ from elftools.common.exceptions import ELFError
 logging.basicConfig(filename="/tmp/elf-symbol-search.log",
                     level=logging.INFO)
 
+PAD = 20
 
 # If dynamic symbol["st_shndx"] == "SH_UNDEF", it is an symbol.
 # Else, it is an export.
@@ -28,10 +29,10 @@ def search_for_dynamic_symbol(file_handle, elf_file, symbol_name, strict):
                 if shndx == "SHN_UNDEF":
                     if strict:
                         if symbol_name == sym_name:
-                            logging.info(f" [IMPORT]: {sym_name}: {file_handle.name}")
+                            logging.info(f" [IMPORT]: {sym_name:{PAD}} {file_handle.name}")
                     else:
                         if symbol_name in sym_name:
-                            logging.info(f" [IMPORT]: {sym_name}: {file_handle.name}")
+                            logging.info(f" [IMPORT]: {sym_name:{PAD}} {file_handle.name}")
 
 
 def parse_file(filepath, symbol_name, strict):

@@ -12,6 +12,8 @@ logging.basicConfig(filename="/tmp/elf-symbol-search.log",
                     level=logging.INFO)
 
 
+PAD = 20
+
 # If dynamic symbol["st_shndx"] == "SH_UNDEF", it is an symbol.
 # Else, it is an export.
 #
@@ -30,17 +32,17 @@ def search_for_dynamic_symbol(file_handle, elf_file, symbol_name, strict):
                 if shndx == "SHN_UNDEF":
                     if strict:
                         if symbol_name == sym_name:
-                            logging.info(f" [+][IMPORT]: {sym_name}: {file_handle.name}")
+                            logging.info(f" [+][IMPORT]: {sym_name:{PAD}} {file_handle.name}")
                     else:
                         if symbol_name in sym_name:
-                            logging.info(f" [+][IMPORT]: {sym_name}: {file_handle.name}")
+                            logging.info(f" [+][IMPORT]: {sym_name:{PAD}} {file_handle.name}")
                 else:
                     if strict:
                         if symbol_name == sym_name:
-                            logging.info(f" [-][EXPORT]: {sym_name}: {file_handle.name}")
+                            logging.info(f" [-][EXPORT]: {sym_name:{PAD}} {file_handle.name}")
                     else:
                         if symbol_name in sym_name:
-                            logging.info(f" [-][EXPORT]: {sym_name}: {file_handle.name}")
+                            logging.info(f" [-][EXPORT]: {sym_name:{PAD}} {file_handle.name}")
 
         if isinstance(section, SymbolTableSection) and section['sh_type'] == 'SHT_SYMTAB':
             for symbol in section.iter_symbols():
@@ -48,10 +50,10 @@ def search_for_dynamic_symbol(file_handle, elf_file, symbol_name, strict):
 
                 if strict:
                     if symbol_name == sym_name:
-                        logging.info(f" [o][SYMTAB]: {sym_name}: {file_handle.name}")
+                        logging.info(f" [o][SYMTAB]: {sym_name:{PAD}} {file_handle.name}")
                 else:
                     if symbol_name == sym_name:
-                        logging.info(f" [o][SYMTAB]: {sym_name}: {file_handle.name}")
+                        logging.info(f" [o][SYMTAB]: {sym_name:{PAD}} {file_handle.name}")
 
 
 
@@ -84,7 +86,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--root-path", help="Root directory of file system search", required=True)
-    parser.add_argument("--symbol-name", help="Name of dynamic symbol to search for", required=True)
+    parser.add_argument("--symbol-name", help="Name of symbol to search for", required=True)
     parser.add_argument("--strict", help="Only exact matches to symbol name argument will be logged", action="store_true")
     args = parser.parse_args()
 
