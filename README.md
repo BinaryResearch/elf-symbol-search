@@ -71,3 +71,8 @@ $ ./find_imports_sources.py
 ### `log_required_libs.py`
 
 Log the set of shared objects required by every dynamically-linked ELF in the given directory tree.
+
+```
+$ ./log_required_libs.py 
+    --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/bin/
+```
