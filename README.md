@@ -6,7 +6,7 @@
 
 ## Description
 
-Search file system for dynamic symbols.
+Search file system for symbols contained in ELF files.
 
 Use cases:
 
