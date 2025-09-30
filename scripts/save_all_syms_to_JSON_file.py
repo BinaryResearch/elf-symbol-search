@@ -51,11 +51,11 @@ def get_symtab_symbols(elf_file):
 
 def create_JSON_record(path, imports, exports, symtab_syms):
     record_dict = {
-        "file name": str(path.name),
-        "file path": str(path),
-        "imported symbols": sorted(imports),
-        "exported symbols": sorted(exports),
-        "symtab symbols": sorted(symtab_syms)
+        "file_name": str(path.name),
+        "file_path": str(path),
+        "imported_symbols": sorted(imports),
+        "exported_symbols": sorted(exports),
+        "symtab_symbols": sorted(symtab_syms)
     }
 
     return json.dumps(record_dict)
