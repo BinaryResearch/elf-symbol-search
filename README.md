@@ -25,7 +25,7 @@ Search for exporters of a dynamic symbol.
 
 ```
 $ python3 ./find_symbol_exporters.py 
-    --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root
+    --root-path DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root
     --symbol-name nvram
 ```
 
@@ -35,7 +35,7 @@ Search for importers of a dynamic symbol.
 
 ```
 $ ./find_symbol_importers.py 
-    --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
+    --root-path DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
     --symbol-name strcpy
 ```
 
@@ -45,7 +45,7 @@ Search for exporters and importers of a dynamic symbol.
 
 ```
 $ ./find_dynamic_symbol.py 
-    --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
+    --root-path DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
     --symbol-name memcpy
 ```
 
@@ -55,7 +55,7 @@ Search for presence of any symbol in `.dynsym` or `.symtab` by name.
 
 ```
 $ ./find_any_symbol.py 
-    --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
+    --root-path DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
     --symbol-name main
     --strict
 ```
@@ -66,8 +66,8 @@ Identify shared object of origin of every import in the specified binary.
 
 ```
 $ ./find_imports_sources.py 
-    --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
-    --elfbin-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/sbin/httpd
+    --root-path DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root 
+    --elfbin-path DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/sbin/httpd
 ```
 
 ### 6. `log_required_libs.py`
@@ -76,7 +76,7 @@ Log the set of shared objects required by every dynamically-linked ELF in the gi
 
 ```
 $ ./log_required_libs.py 
-    --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/bin/
+    --root-path DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/bin/
 ```
 
 ### 7. `save_all_syms_to_JSON_file.py`
@@ -85,7 +85,7 @@ Create a JSON file consisting of records containing symbol info of each ELF file
 
 ```
 $ ./save_all_syms_to_JSON_file.py 
-    --root-path ~/repos/corpora/CVE/linux-iot-cves/fw/D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/ 
+    --root-path ~/repos/corpora/CVE/linux-iot-cves/fw/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/ 
     --output-path /tmp/dlink-DIR868L-symbols.json
 ```
 
@@ -134,7 +134,7 @@ $ cat /tmp/dlink-DIR868L-symbols.json | jq 'select(.file_name == "brctl")'
 
 {
   "file_name": "brctl",
-  "file_path": "D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/sbin/brctl",
+  "file_path": "DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/sbin/brctl",
   "imported_symbols": [
     "_Jv_RegisterClasses",
     "__aeabi_unwind_cpp_pr0",
@@ -302,9 +302,9 @@ $ cat /tmp/dlink-DIR868L-symbols.json | jq 'select(.symtab_symbols | length > 0)
 ```
 $ cat /tmp/dlink-DIR868L-symbols.json | jq 'select(.required_libraries | length > 5)' | jq '.file_path'
 
-"D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/lib/libavformat.so"
-"D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/lib/libavformat.so.53"
-"D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/bin/minidlna"
-"D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/sbin/wps_monitor"
-"D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/sbin/tr069c"
+"DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/lib/libavformat.so"
+"DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/lib/libavformat.so.53"
+"DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/bin/minidlna"
+"DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/sbin/wps_monitor"
+"DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/sbin/tr069c"
 ```
