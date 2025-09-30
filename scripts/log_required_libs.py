@@ -17,14 +17,10 @@ logging.basicConfig(filename="/tmp/elf-symbol-search.log",
                     level=logging.INFO)
 
 
-
 def get_required_shared_objects(elf_file):
     shared_objects_list = []
-    #for section in elf_file.iter_sections():
-    #    if isinstance(section, SymbolTableSection) and section['sh_type'] == 'SHT_DYNSYM':
     dynamic_section = elf_file.get_section_by_name(".dynamic")
     if not dynamic_section:
-        #logging.error(f"[!] No '.dynamic' section in '{elf_file}'. Quitting.")
         return None
 
     for tag in dynamic_section.iter_tags():
@@ -44,12 +40,9 @@ def parse_file(file_path):
             logging.error(f"[!] ERROR: unexpected error parsing '{f.name}'")
             return
 
-        #logging.info(f" Getting required shared objects of '{file_path}'")
-
         # Get names of required shared objects
         shared_objects_list = get_required_shared_objects(elf_file)
         if shared_objects_list is None or len(shared_objects_list) == 0:
-            #logging.error(f"[!] No required shared objects found. Quitting.")
             return
 
         logging.info(f" {f.name} DT_NEEDED: {shared_objects_list}")
