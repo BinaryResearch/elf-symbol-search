@@ -12,9 +12,6 @@ from elftools.common.exceptions import ELFError
 logging.basicConfig(filename="/tmp/elf-symbol-search.log",
                     level=logging.INFO)
 
-
-PAD = 20
-
 # If dynamic symbol["st_shndx"] == "SH_UNDEF", it is an symbol.
 # Else, it is an export.
 def get_dynamic_symbols(elf_file):
@@ -87,17 +84,23 @@ def main(args):
         logging.info(f"[-] '{args.root_path}' is not a directory.")
         exit(-1)
 
-    for file_path in pathlib.Path(root_path).rglob("*"):
-        if not pathlib.Path.is_file(file_path):
-            continue
+    with open(args.output_path, "w") as f:
+        for file_path in pathlib.Path(root_path).rglob("*"):
+            if not pathlib.Path.is_file(file_path):
+                 continue
 
-        json_record = parse_file(file_path)
-        print(json_record)
+            json_record = parse_file(file_path)
+            #print(json_record)
+            if json_record is None:
+                continue
+            else:
+                f.write(json_record + "\n")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--root-path", help="Root directory of file system search", required=True)
+    parser.add_argument("--output-path", help="Path to save JSON file to", required=True)
     args = parser.parse_args()
 
     main(args)
