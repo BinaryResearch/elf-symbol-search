@@ -81,7 +81,7 @@ $ ./log_required_libs.py
 
 ### 7. `save_all_syms_to_JSON_file.py`
 
-Create a JSON file consisting of records containing symbol info of each ELF file in the traversed directory structure.
+Create a JSON file consisting of records of every ELF binary in the traversed directory structure. These records contain symbol-related information.
 
 ```
 $ ./save_all_syms_to_JSON_file.py 
@@ -127,7 +127,7 @@ $ cat /tmp/dlink-DIR868L-symbols.json | grep sprintf | grep system | grep getenv
 ```
 
 
-**`jq` query to displaying an example record for binary `brctl`:**
+**`jq` query to display an example record for binary `brctl`:**
 
 ```
 $ cat /tmp/dlink-DIR868L-symbols.json | jq 'select(.file_name == "brctl")'
