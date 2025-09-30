@@ -5,7 +5,6 @@ import argparse
 import logging
 from enum import Enum
 from elftools.elf.elffile import ELFFile
-from elftools.elf.sections import SymbolTableSection
 from elftools.common.exceptions import ELFError
 
 
