@@ -18,7 +18,7 @@ PAD = 20
 # Else, it is an export.
 #
 # Check .dynsym and .symtab
-def search_for_dynamic_symbol(file_handle, elf_file, symbol_name, strict):
+def search_for_symbol(file_handle, elf_file, symbol_name, strict):
     for section in elf_file.iter_sections():
         if isinstance(section, SymbolTableSection) and section['sh_type'] == 'SHT_DYNSYM':
             for symbol in section.iter_symbols():
@@ -56,7 +56,6 @@ def search_for_dynamic_symbol(file_handle, elf_file, symbol_name, strict):
                         logging.info(f" [o][SYMTAB]: {sym_name:{PAD}} {file_handle.name}")
 
 
-
 def parse_file(filepath, symbol_name, strict):
     with open(filepath, "rb") as f:
         try:
@@ -67,7 +66,7 @@ def parse_file(filepath, symbol_name, strict):
             logging.error(f"[!] ERROR: unexpected error parsing '{f.name}'")
             return
 
-        search_for_dynamic_symbol(f, elf_file, symbol_name, strict)        
+        search_for_symbol(f, elf_file, symbol_name, strict)        
 
 
 def main(args):
