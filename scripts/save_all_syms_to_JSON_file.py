@@ -49,13 +49,41 @@ def get_symtab_symbols(elf_file):
     return symbols
 
 
-def create_JSON_record(path, imports, exports, symtab_syms):
+def get_required_shared_objects(elf_file):
+    shared_objects_list = []
+    dynamic_section = elf_file.get_section_by_name(".dynamic")
+    if not dynamic_section:
+        return None
+
+    for tag in dynamic_section.iter_tags():
+        if tag.entry.d_tag == "DT_NEEDED":
+            shared_objects_list.append(tag.needed)
+
+    return shared_objects_list
+
+
+def create_JSON_record(path, imports, exports, symtab_syms, required_libs):
+    if required_libs is not None:
+        if len(required_libs) > 0:
+            required_libs = sorted(required_libs)
+    
+    if len(imports) > 0:
+        imports = sorted(imports)
+
+    if len(exports) > 0:
+        exports = sorted(exports)
+
+    if len(symtab_syms) > 0:
+        symtab_syms = sorted(symtab_syms)
+
+
     record_dict = {
         "file_name": str(path.name),
         "file_path": str(path),
-        "imported_symbols": sorted(imports),
-        "exported_symbols": sorted(exports),
-        "symtab_symbols": sorted(symtab_syms)
+        "required_libraries": required_libs,
+        "imported_symbols": imports,
+        "exported_symbols": exports,
+        "symtab_symbols": symtab_syms
     }
 
     return json.dumps(record_dict)
@@ -73,7 +101,9 @@ def parse_file(filepath):
 
         imported_syms_list, exported_syms_list = get_dynamic_symbols(elf_file)
         symtab_syms_list = get_symtab_symbols(elf_file)
-        json_file_record = create_JSON_record(filepath, imported_syms_list, exported_syms_list, symtab_syms_list)
+        required_shared_objects = get_required_shared_objects(elf_file)
+
+        json_file_record = create_JSON_record(filepath, imported_syms_list, exported_syms_list, symtab_syms_list, required_shared_objects)
 
     return json_file_record
 
