@@ -297,7 +297,7 @@ $ cat /tmp/dlink-DIR868L-symbols.json | jq 'select(.symtab_symbols | length > 0)
 ```
 
 
-**`jq` query to get the set of binaries that import dynamic symbols from more than 5 shared objects:**
+**`jq` query to get the set of binaries that require more than 5 shared objects:**
 
 ```
 $ cat /tmp/dlink-DIR868L-symbols.json | jq 'select(.required_libraries | length > 5)' | jq '.file_path'
