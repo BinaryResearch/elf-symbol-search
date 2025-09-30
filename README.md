@@ -19,7 +19,7 @@ Note: all search results are output to `/tmp/elf-symbol-search.log`.
 ## Examples
 
 
-### `find_symbol_exporters.py`
+### 1. `find_symbol_exporters.py`
 
 Search for exporters of a dynamic symbol.
 
@@ -29,7 +29,7 @@ $ python3 ./find_symbol_exporters.py
     --symbol-name nvram
 ```
 
-### `find_symbol_importers.py`
+### 2. `find_symbol_importers.py`
 
 Search for importers of a dynamic symbol.
 
@@ -39,7 +39,7 @@ $ ./find_symbol_importers.py
     --symbol-name strcpy
 ```
 
-### `find_dynamic_symbol.py`
+### 3. `find_dynamic_symbol.py`
 
 Search for exporters and importers of a dynamic symbol.
 
@@ -49,7 +49,7 @@ $ ./find_dynamic_symbol.py
     --symbol-name memcpy
 ```
 
-### `find_any_symbol.py`
+### 4. `find_any_symbol.py`
 
 Search for presence of any symbol in `.dynsym` or `.symtab` by name.
 
@@ -60,7 +60,7 @@ $ ./find_any_symbol.py
     --strict
 ```
 
-### `find_imports_sources.py`
+### 5. `find_imports_sources.py`
 
 Identify shared object of origin of every import in the specified binary.
 
@@ -70,7 +70,7 @@ $ ./find_imports_sources.py
     --elfbin-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/sbin/httpd
 ```
 
-### `log_required_libs.py`
+### 6. `log_required_libs.py`
 
 Log the set of shared objects required by every dynamically-linked ELF in the given directory tree.
 
@@ -79,7 +79,7 @@ $ ./log_required_libs.py
     --root-path D-Link/DIR-868L/extractions/DIR868LA1_FW110SHC.bin.extracted/1B0090/squashfs-root/usr/bin/
 ```
 
-### `save_all_syms_to_JSON_file.py`
+### 7. `save_all_syms_to_JSON_file.py`
 
 Create a JSON file consisting of records containing symbol info of each ELF file in the traversed directory structure.
 
