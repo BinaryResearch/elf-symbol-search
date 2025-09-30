@@ -127,7 +127,7 @@ $ cat /tmp/dlink-DIR868L-symbols.json | grep sprintf | grep system | grep getenv
 ```
 
 
-**Query via `jq` displaying an example record for binary `brctl`:**
+**`jq` query to displaying an example record for binary `brctl`:**
 
 ```
 $ cat /tmp/dlink-DIR868L-symbols.json | jq 'select(.file_name == "brctl")'
@@ -297,7 +297,7 @@ $ cat /tmp/dlink-DIR868L-symbols.json | jq 'select(.symtab_symbols | length > 0)
 ```
 
 
-**Query with `jq` to get the set of binaries that import dynamic symbols from more than 5 shared objects:**
+**`jq` query to get the set of binaries that import dynamic symbols from more than 5 shared objects:**
 
 ```
 $ cat /tmp/dlink-DIR868L-symbols.json | jq 'select(.required_libraries | length > 5)' | jq '.file_path'
