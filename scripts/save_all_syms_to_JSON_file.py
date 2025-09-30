@@ -43,7 +43,11 @@ def get_symtab_symbols(elf_file):
     for section in elf_file.iter_sections():
         if isinstance(section, SymbolTableSection) and section['sh_type'] == 'SHT_SYMTAB':
             for symbol in section.iter_symbols():
-                symbols.append(symbol.name)
+                sym_name = symbol.name
+                if len(sym_name) < 1:
+                    continue
+                else:
+                     symbols.append(symbol.name)
 
     return symbols
 
