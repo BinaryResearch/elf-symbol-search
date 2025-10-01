@@ -52,7 +52,7 @@ def get_required_shared_objects(elf_file):
     #    if isinstance(section, SymbolTableSection) and section['sh_type'] == 'SHT_DYNSYM':
     dynamic_section = elf_file.get_section_by_name(".dynamic")
     if not dynamic_section:
-        logging.error(f"[!] No '.dynamic' section found. Quitting.")
+        logging.error("[!] No '.dynamic' section found. Quitting.")
         return None
 
     for tag in dynamic_section.iter_tags():
