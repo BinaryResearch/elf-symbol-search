@@ -13,7 +13,8 @@ class DynSymType(Enum):
     EXPORT = 1
 
 
-logging.basicConfig(filename="/tmp/elf-symbol-search.log",
+LOGFILE = "/tmp/elf-symbol-search.log"
+logging.basicConfig(filename=LOGFILE,
                     level=logging.INFO)
 
 
@@ -46,10 +47,12 @@ def parse_file(file_path):
             return
 
         logging.info(f" {f.name} DT_NEEDED: {shared_objects_list}")
-        print(f" {f.name} DT_NEEDED: {shared_objects_list}")
+        #print(f" {f.name} DT_NEEDED: {shared_objects_list}")
         
 
 def main(args):
+    print(f"\n********************** Output written to '{LOGFILE}' **********************\n")
+
     root_path = pathlib.Path(args.root_path)
     if not root_path.is_dir():
         logging.error(f"[!] '{args.root_path}' is not a directory. Quitting.")

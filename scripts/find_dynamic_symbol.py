@@ -8,7 +8,8 @@ from elftools.elf.sections import SymbolTableSection
 from elftools.common.exceptions import ELFError
 
 
-logging.basicConfig(filename="/tmp/elf-symbol-search.log",
+LOGFILE = "/tmp/elf-symbol-search.log"
+logging.basicConfig(filename=LOGFILE,
                     level=logging.INFO)
 
 PAD = 20
@@ -56,6 +57,8 @@ def parse_file(filepath, symbol_name, strict):
 
 
 def main(args):
+    print(f"********************** Output written to '{LOGFILE}' **********************")
+
     root_path = pathlib.Path(args.root_path)
     if not root_path.is_dir():
         logging.info(f"[-] '{args.root_path}' is not a directory.")
@@ -74,5 +77,6 @@ if __name__ == "__main__":
     parser.add_argument("--symbol-name", help="Name of dynamic symbol to search for", required=True)
     parser.add_argument("--strict", help="Only exact matches to symbol name argument will be logged", action="store_true")
     args = parser.parse_args()
+
 
     main(args)

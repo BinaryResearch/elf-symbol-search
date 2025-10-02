@@ -14,7 +14,8 @@ class DynSymType(Enum):
     EXPORT = 1
 
 
-logging.basicConfig(filename="/tmp/elf-symbol-search.log",
+LOGFILE = "/tmp/elf-symbol-search.log"
+logging.basicConfig(filename=LOGFILE,
                     level=logging.INFO)
 
 
@@ -144,6 +145,8 @@ def parse_file(file_path, root_path):
         logging.info(f" IMPORT TO SOURCE MAPPING:\t{import_source_map}")
 
 def main(args):
+    print(f"********************** Output written to '{LOGFILE}' **********************")
+
     root_path = pathlib.Path(args.root_path)
     if not root_path.is_dir():
         logging.error(f"[!] '{args.root_path}' is not a directory. Quitting.")
